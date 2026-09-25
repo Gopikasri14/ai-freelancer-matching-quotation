@@ -8,36 +8,42 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from app.api.v1.health import router as health_router
+from app.core.config import get_settings
+from app.api.v1.api import api_router
+
+settings = get_settings()
 
 app = FastAPI(
-    title="AI Freelancer Matching and Quotation Optimization System",
+    title=settings.PROJECT_NAME,
     description="Production-style API for AI-powered freelancer recommendations and quotation optimization.",
-    version="0.1.0",
+    version=settings.VERSION,
     docs_url="/docs",
     redoc_url="/redoc",
+    debug=settings.DEBUG,
 )
 
-# Configure CORS Middleware for development
+# Configure CORS Middleware using settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Include v1 Routers
-app.include_router(health_router, prefix="/api/v1")
+# Mount API v1 router hub
+app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/", tags=["Root"])
 def read_root():
     """
-    Root entry point providing discovery links to docs and health status.
+    Root discovery endpoint providing links to documentation and system health.
     """
     return {
-        "message": "Welcome to AI Freelancer Matching and Quotation Optimization API",
+        "message": f"Welcome to {settings.PROJECT_NAME}",
+        "version": settings.VERSION,
+        "environment": settings.ENVIRONMENT,
         "docs": "/docs",
-        "health": "/api/v1/health",
+        "health": f"{settings.API_V1_PREFIX}/health",
     }
