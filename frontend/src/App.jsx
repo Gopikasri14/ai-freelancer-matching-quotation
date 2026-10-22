@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-const API = "http://127.0.0.1:8000/api/v1";
+const API = "https://ai-freelancer-matching-backend.onrender.com/api/v1";
 
 function App() {
   const [form, setForm] = useState({
@@ -303,3 +303,4 @@ function App() {
 }
 
 export default App;
+
