@@ -1,46 +1,49 @@
-# AI-Powered Freelancer Matching and Quotation Optimization System
+# AI Freelancer Matching & Quotation Optimization System
 
-A production-style web application designed to connect clients with qualified freelancers using machine learning recommendation and generate transparent, explainable project quotations calibrated in Indian Rupees (₹ / INR).
+A full-stack college/project MVP implementing:
 
----
+Client requirements → TF-IDF + cosine similarity → freelancer recommendations → selected freelancer → XGBoost effort/price prediction → rule-based quotation optimization.
 
-## Architecture Overview
-The application follows a **Modular Monolith** architecture:
-* **Backend**: Python 3.11+, FastAPI, PostgreSQL, SQLAlchemy 2.0 (async), Alembic
-* **Machine Learning**:
-  * Semantic requirement matching: **TF-IDF + Cosine Similarity + Jaccard Skill Overlap**
-  * Effort estimation: **XGBoost Regressor** (predicting hours)
-  * Baseline quotation: **XGBoost Regressor** (predicting baseline cost in ₹)
-  * Final price adjustment: **Deterministic Rule-Based Optimizer**
-* **Frontend**: React 18, TypeScript, Tailwind CSS (Milestone 16+)
+> Training data in `data/sample/` is synthetic and clearly labelled. It is for development/demo purposes and must not be presented as real market pricing.
 
----
+## Stack
+- Backend: FastAPI, SQLAlchemy, SQLite
+- ML: scikit-learn TF-IDF/cosine similarity, XGBoost, pandas, joblib
+- Frontend: React + Vite
+- Database: SQLite for local development; can be replaced with PostgreSQL later
 
-## Milestone 1: Development Environment Setup
-
-### 1. Prerequisites
-* **Python 3.11+**
-* **Git for Windows**
-* **Node.js 18+ LTS** (for subsequent frontend milestones)
-
-### 2. Quickstart (Windows PowerShell)
-
+## Run backend
 ```powershell
-# 1. Create a virtual environment using Python 3.11
+cd backend
 py -3.11 -m venv .venv
-
-# 2. Activate the virtual environment
 .\.venv\Scripts\Activate.ps1
-
-# 3. Upgrade pip and install dependencies
-python -m pip install --upgrade pip
 pip install -r requirements.txt
-
-# 4. Run the FastAPI development server
-uvicorn backend.app.main:app --reload --host 127.0.0.1 --port 8000
+python -m app.seed
+python -m app.ml.train
+uvicorn app.main:app --reload
 ```
 
-### 3. Verify Health & API Documentation
-* **Health Check**: [http://127.0.0.1:8000/api/v1/health](http://127.0.0.1:8000/api/v1/health)
-* **Swagger Interactive Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-* **ReDoc Documentation**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+API: http://127.0.0.1:8000
+Docs: http://127.0.0.1:8000/docs
+
+## Run frontend
+Open another terminal:
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Open the URL printed by Vite (normally http://localhost:5173).
+
+## Core workflow
+1. Enter project requirements.
+2. Create the project.
+3. Click Find Freelancers.
+4. Review TF-IDF/cosine similarity scores.
+5. Select a freelancer.
+6. Generate a quotation.
+7. View effort, base price, adjustments and recommended range.
+
+## Important
+The quotation model is trained from synthetic sample records generated for this prototype. Replace the sample data with permitted historical project data before making real pricing decisions.

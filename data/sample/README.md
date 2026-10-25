@@ -1,0 +1,1 @@
+These are synthetic/sample records created for development and demonstration. They are not real market quotations. Replace them with permitted historical project records for real-world model training.

@@ -1,3 +1,0 @@
-"""
-Backend test suite package.
-"""
